@@ -1,0 +1,54 @@
+/* Remove default margin */
+body {
+  margin: 0;
+  overflow: hidden; /* optional: hides scrollbars */
+}
+
+/* Full-screen canvas */
+#box {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Center button absolutely */
+#click_me {
+  position: absolute;  /* absolute positioning */
+  top: 70%;            /* 50% from top */
+  left: 30%;           /* 50% from left */
+  transform: translate(-50%, -50%); /* shift center */
+  
+  padding: 12px 24px;  /* size */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+
+  background-color: white;
+  color: black;
+  border: black;
+  border-radius: 8px;
+}
+
+
+/* Header styling using ID */
+#mainHeader {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  font-family: Arial, sans-serif;
+}
+
+#mainHeader h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #333;
+}
+
+#mainHeader p {
+  margin: 5px 0 0 0;
+  font-size: 18px;
+  color: #555;
+}
+
