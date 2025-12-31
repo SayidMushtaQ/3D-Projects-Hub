@@ -1,59 +1,103 @@
-import * as THREE from 'three'
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js'
-
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { legGeoMetry } from "./lib/createLegs.js";
 // Sceen
-const sceen = new THREE.Scene()
-sceen.background = new THREE.Color('#e1e3e1')
+const sceen = new THREE.Scene();
+sceen.background = new THREE.Color("#e1e3e1");
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000)
-camera.position.z = 3
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.z = 10;
 
-// Canvas 
-const canvas = document.getElementById('draw')
+// Canvas
+const canvas = document.getElementById("draw");
 
-// Renderer 
-const renderer = new THREE.WebGLRenderer({canvas,antialias:true})
-renderer.setSize(window.innerWidth,window.innerHeight)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
+// Renderer
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+//  Ground geometry (flat surface)
+const groundGeometry = new THREE.PlaneGeometry(7, 7, 10, 10);
+const groundMaterial = new THREE.MeshStandardMaterial({
+  color: 0x2f2f2f,
+  roughness: 0.9,
+  metalness: 0.0,
+  side: THREE.DoubleSide,
+  wireframe: true,
+});
 
-// cube
-const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshStandardMaterial({color:'white'})
-const cube = new THREE.Mesh(geometry,material);
+const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -2;
 
-sceen.add(cube)
+sceen.add(ground);
 
+// Platform geometry (square, solid)
+const platformGeometry = new THREE.BoxGeometry(4, 0.5, 4);
+const plateformMaterial = new THREE.MeshStandardMaterial({
+  color: 0x555555,
+  roughness: 0.7,
+  metalness: 0.05,
+});
 
-//Light 
-const ambienlight = new THREE.AmbientLight(0xffffff,0.5)
-sceen.add(ambienlight)
+const platform = new THREE.Mesh(platformGeometry, plateformMaterial);
+platform.position.y = -1.76;
 
-const directionalLight = new THREE.DirectionalLight(0xffffff,1)
-directionalLight.position.set(5,5,4)
-sceen.add(directionalLight)
+sceen.add(platform);
 
-const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight,1,'red');
-sceen.add(directionalLightHelper)
+// Tower legs geometry
+
+const legMaterial = new THREE.MeshStandardMaterial({
+  color: 0x9ca3af,
+  roughness: 0.4,
+  metalness: 0.8,
+});
+const offset = 1.3;
+
+sceen.add(
+  legGeoMetry(offset, offset, legMaterial),
+  legGeoMetry(offset, -offset, legMaterial),
+  legGeoMetry(-offset, offset, legMaterial),
+  legGeoMetry(-offset, -offset, legMaterial)
+);
+
+//Light
+const ambienlight = new THREE.AmbientLight(0xffffff, 0.5);
+sceen.add(ambienlight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 5, 4);
+sceen.add(directionalLight);
+
+const directionalLightHelper = new THREE.DirectionalLightHelper(
+  directionalLight,
+  1,
+  "red"
+);
+sceen.add(directionalLightHelper);
 
 // OrbitControls
-const controls = new OrbitControls(camera,renderer.domElement)
+const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.dampingFactor = 0.5
-
+controls.dampingFactor = 0.5;
 
 // Resize
-window.addEventListener('resize',()=>{
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth,window.innerHeight)
-})
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-function action(){
-    renderer.render(sceen,camera)
-    controls.update()
-    console.log('hi')
-    requestAnimationFrame(action)
+function action() {
+  renderer.render(sceen, camera);
+  controls.update();
+  console.log("hi");
+  requestAnimationFrame(action);
 }
-action()
+action();
