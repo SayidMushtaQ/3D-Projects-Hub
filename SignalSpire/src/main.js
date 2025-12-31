@@ -58,7 +58,7 @@ const legMaterial = new THREE.MeshStandardMaterial({
   roughness: 0.4,
   metalness: 0.8,
 });
-const offset = 1.3;
+const offset = 0.6;
 
 sceen.add(
   legGeoMetry(offset, offset, legMaterial),
