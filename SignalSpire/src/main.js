@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
 import { legGeoMetry } from "./lib/createLegs.js";
+import { createBrace } from "./lib/createBrace.js";
 // Sceen
 const sceen = new THREE.Scene();
 sceen.background = new THREE.Color("#e1e3e1");
@@ -66,6 +68,57 @@ sceen.add(
   legGeoMetry(-offset, offset, legMaterial),
   legGeoMetry(-offset, -offset, legMaterial)
 );
+// Brace geometry
+
+for (let y = -0.8; y < 6; y++) {
+  //Back brace
+  const bacekBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  bacekBrace1.position.x = 0;
+  bacekBrace1.position.z = -0.6;
+
+  const backBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  backBrace2.position.x = 0;
+  backBrace2.position.z = -0.6;
+
+  sceen.add(bacekBrace1, backBrace2);
+
+  //Front brace
+  const frontBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  frontBrace1.position.x = 0;
+  frontBrace1.position.z = 0.6;
+
+  const frontBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  frontBrace2.position.x = 0;
+  frontBrace2.position.z = 0.6;
+
+  sceen.add(frontBrace1, frontBrace2);
+
+  //Left brace
+  const leftBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  leftBrace1.position.x = -0.6;
+  leftBrace1.position.z = 0;
+  leftBrace1.rotation.y = 1.6;
+
+  const leftBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  leftBrace2.position.x = -0.6;
+  leftBrace2.position.z = 0;
+  leftBrace2.rotation.y = 1.6;
+
+  sceen.add(leftBrace1, leftBrace2);
+
+  // Right brace
+  const rightBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  rightBrace1.position.x = 0.6;
+  rightBrace1.position.z = 0;
+  rightBrace1.rotation.y = 1.6;
+
+  const rightBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  rightBrace2.position.x = 0.6;
+  rightBrace2.position.z = 0;
+  rightBrace2.rotation.y = 1.6;
+
+  sceen.add(rightBrace1, rightBrace2);
+}
 
 //Light
 const ambienlight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -97,7 +150,6 @@ window.addEventListener("resize", () => {
 function action() {
   renderer.render(sceen, camera);
   controls.update();
-  console.log("hi");
   requestAnimationFrame(action);
 }
 action();
