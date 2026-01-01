@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 import { legGeoMetry } from "./lib/createLegs.js";
 import { createBrace } from "./lib/createBrace.js";
+import { createHorizontalBar } from "./lib/createHorizontalBar.js";
 // Sceen
 const sceen = new THREE.Scene();
 sceen.background = new THREE.Color("#e1e3e1");
@@ -118,6 +119,30 @@ for (let y = -0.8; y < 6; y++) {
   rightBrace2.rotation.y = 1.6;
 
   sceen.add(rightBrace1, rightBrace2);
+}
+
+// Horizontal Bar
+function createRing(y) {
+  const size = 1;
+  const front = createHorizontalBar(size, legMaterial);
+  front.position.set(0, y, 0.6);
+
+  const back = createHorizontalBar(size, legMaterial);
+  back.position.set(0, y, -0.6);
+
+  const left = createHorizontalBar(size, legMaterial);
+  left.rotation.y = Math.PI / 2;
+  left.position.set(-0.6, y, 0);
+
+  const right = createHorizontalBar(size, legMaterial);
+  right.rotation.y = Math.PI / 2;
+  right.position.set(0.6, y, 0);
+
+  sceen.add(front, back, left, right);
+}
+
+for (let y = 0.1; y <= 6; y += 1.9) {
+  createRing(y);
 }
 
 //Light
