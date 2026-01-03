@@ -58,7 +58,7 @@ sceen.add(platform);
 
 // Tower legs geometry
 
-const legMaterial = new THREE.MeshStandardMaterial({
+const blackMaterial = new THREE.MeshStandardMaterial({
   color: 0x9ca3af,
   roughness: 0.4,
   metalness: 0.8,
@@ -66,43 +66,43 @@ const legMaterial = new THREE.MeshStandardMaterial({
 const offset = 0.6;
 
 sceen.add(
-  legGeoMetry(offset, offset, legMaterial),
-  legGeoMetry(offset, -offset, legMaterial),
-  legGeoMetry(-offset, offset, legMaterial),
-  legGeoMetry(-offset, -offset, legMaterial)
+  legGeoMetry(offset, offset, blackMaterial),
+  legGeoMetry(offset, -offset, blackMaterial),
+  legGeoMetry(-offset, offset, blackMaterial),
+  legGeoMetry(-offset, -offset, blackMaterial)
 );
 // Brace geometry
 
 for (let y = -0.8; y < 6; y++) {
   //Back brace
-  const bacekBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  const bacekBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
   bacekBrace1.position.x = 0;
   bacekBrace1.position.z = -0.6;
 
-  const backBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  const backBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
   backBrace2.position.x = 0;
   backBrace2.position.z = -0.6;
 
   sceen.add(bacekBrace1, backBrace2);
 
   //Front brace
-  const frontBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  const frontBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
   frontBrace1.position.x = 0;
   frontBrace1.position.z = 0.6;
 
-  const frontBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  const frontBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
   frontBrace2.position.x = 0;
   frontBrace2.position.z = 0.6;
 
   sceen.add(frontBrace1, frontBrace2);
 
   //Left brace
-  const leftBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  const leftBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
   leftBrace1.position.x = -0.6;
   leftBrace1.position.z = 0;
   leftBrace1.rotation.y = 1.6;
 
-  const leftBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  const leftBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
   leftBrace2.position.x = -0.6;
   leftBrace2.position.z = 0;
   leftBrace2.rotation.y = 1.6;
@@ -110,12 +110,12 @@ for (let y = -0.8; y < 6; y++) {
   sceen.add(leftBrace1, leftBrace2);
 
   // Right brace
-  const rightBrace1 = createBrace(y, 0, Math.PI / 4, legMaterial);
+  const rightBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
   rightBrace1.position.x = 0.6;
   rightBrace1.position.z = 0;
   rightBrace1.rotation.y = 1.6;
 
-  const rightBrace2 = createBrace(y, 0, -Math.PI / 4, legMaterial);
+  const rightBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
   rightBrace2.position.x = 0.6;
   rightBrace2.position.z = 0;
   rightBrace2.rotation.y = 1.6;
@@ -126,17 +126,17 @@ for (let y = -0.8; y < 6; y++) {
 // Horizontal Bar
 function createRing(y) {
   const size = 1;
-  const front = createHorizontalBar(size, legMaterial);
+  const front = createHorizontalBar(size, blackMaterial);
   front.position.set(0, y, 0.6);
 
-  const back = createHorizontalBar(size, legMaterial);
+  const back = createHorizontalBar(size, blackMaterial);
   back.position.set(0, y, -0.6);
 
-  const left = createHorizontalBar(size, legMaterial);
+  const left = createHorizontalBar(size, blackMaterial);
   left.rotation.y = Math.PI / 2;
   left.position.set(-0.6, y, 0);
 
-  const right = createHorizontalBar(size, legMaterial);
+  const right = createHorizontalBar(size, blackMaterial);
   right.rotation.y = Math.PI / 2;
   right.position.set(0.6, y, 0);
 
@@ -152,20 +152,35 @@ const ladderX = -0.77
 const ladderZ = 0.33
 
 sceen.add(
-  createLadderRail(ladderX,ladderZ - 0.3,legMaterial),
-  createLadderRail(ladderX,ladderZ + 0.3,legMaterial)
+  createLadderRail(ladderX,ladderZ - 0.3,blackMaterial),
+  createLadderRail(ladderX,ladderZ + 0.3,blackMaterial)
 )
 
-for(let y = 1; y<=5; y+= 0.9){
-  sceen.add(createRung(ladderX,y,ladderZ,legMaterial))
+for(let y = 1.5; y<=5; y+= 0.9){
+  sceen.add(createRung(ladderX,y,ladderZ,blackMaterial))
 }
+
+// White Material 
+const whiteMaterial = new THREE.MeshStandardMaterial({
+  color: 0xe6e6e6,   
+  roughness: 0.65,  
+  metalness: 0.02,   
+})
+
+// Create antenna
+const geometry = new THREE.BoxGeometry(0.3,1.5,0.25)
+
+const antenna = new THREE.Mesh(geometry,whiteMaterial)
+antenna.position.set(0,5,0.9)
+sceen.add(antenna)
+
 
 //Light
 const ambienlight = new THREE.AmbientLight(0xffffff, 0.5);
 sceen.add(ambienlight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 5, 4);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+directionalLight.position.set(5,5,4);
 sceen.add(directionalLight);
 
 const directionalLightHelper = new THREE.DirectionalLightHelper(
