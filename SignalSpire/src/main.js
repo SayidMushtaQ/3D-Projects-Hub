@@ -4,6 +4,8 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { legGeoMetry } from "./lib/createLegs.js";
 import { createBrace } from "./lib/createBrace.js";
 import { createHorizontalBar } from "./lib/createHorizontalBar.js";
+import {createLadderRail} from './lib/createLadderRail.js'
+import { createRung } from "./lib/createRung.js";
 // Sceen
 const sceen = new THREE.Scene();
 sceen.background = new THREE.Color("#e1e3e1");
@@ -143,6 +145,19 @@ function createRing(y) {
 
 for (let y = 0.1; y <= 6; y += 1.9) {
   createRing(y);
+}
+
+// Create Ladder
+const ladderX = -0.77
+const ladderZ = 0.33
+
+sceen.add(
+  createLadderRail(ladderX,ladderZ - 0.3,legMaterial),
+  createLadderRail(ladderX,ladderZ + 0.3,legMaterial)
+)
+
+for(let y = 1; y<=5; y+= 0.9){
+  sceen.add(createRung(ladderX,y,ladderZ,legMaterial))
 }
 
 //Light
