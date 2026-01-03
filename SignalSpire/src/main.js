@@ -6,13 +6,15 @@ import { createBrace } from "./lib/createBrace.js";
 import { createHorizontalBar } from "./lib/createHorizontalBar.js";
 import {createLadderRail} from './lib/createLadderRail.js'
 import { createRung } from "./lib/createRung.js";
+import {createAntenna} from './lib/createAntenna.js'
+import {createTopAntenna} from './lib/createTopAntenna.js'
 // Sceen
 const sceen = new THREE.Scene();
 sceen.background = new THREE.Color("#e1e3e1");
 
 // Camera
 const camera = new THREE.PerspectiveCamera(
-  75,
+  80,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
@@ -168,11 +170,18 @@ const whiteMaterial = new THREE.MeshStandardMaterial({
 })
 
 // Create antenna
-const geometry = new THREE.BoxGeometry(0.3,1.5,0.25)
+const antennaY = 5.4;
 
-const antenna = new THREE.Mesh(geometry,whiteMaterial)
-antenna.position.set(0,5,0.9)
-sceen.add(antenna)
+
+sceen.add(createAntenna(-0.81,antennaY,0.75,whiteMaterial,2.2)) // Front left 
+sceen.add(createAntenna(0.81,antennaY,0.75,whiteMaterial,0.8)) // Front right
+
+sceen.add(createAntenna(-0.81,antennaY,-0.75,whiteMaterial,0.8)) // back left 
+sceen.add(createAntenna(0.81,antennaY,-0.75,whiteMaterial,2.2)) // back right
+
+// Create Top Antena
+const {topAntenna,redLight} = createTopAntenna(-0.6,6.5,0.6,blackMaterial)
+sceen.add(topAntenna,redLight)
 
 
 //Light
