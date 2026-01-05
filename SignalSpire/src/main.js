@@ -4,10 +4,12 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { legGeoMetry } from "./lib/createLegs.js";
 import { createBrace } from "./lib/createBrace.js";
 import { createHorizontalBar } from "./lib/createHorizontalBar.js";
-import {createLadderRail} from './lib/createLadderRail.js'
+import { createLadderRail } from "./lib/createLadderRail.js";
 import { createRung } from "./lib/createRung.js";
-import {createAntenna} from './lib/createAntenna.js'
-import {createTopAntenna} from './lib/createTopAntenna.js'
+import { createAntenna } from "./lib/createAntenna.js";
+import { createTopAntenna } from "./lib/createTopAntenna.js";
+import {createDish} from './lib/createDish.js'
+import {createDishPole} from './lib/createDishPole.js'
 // Sceen
 const sceen = new THREE.Scene();
 sceen.background = new THREE.Color("#e1e3e1");
@@ -150,46 +152,57 @@ for (let y = 0.1; y <= 6; y += 1.9) {
 }
 
 // Create Ladder
-const ladderX = -0.77
-const ladderZ = 0.33
+const ladderX = -0.77;
+const ladderZ = 0.33;
 
 sceen.add(
-  createLadderRail(ladderX,ladderZ - 0.3,blackMaterial),
-  createLadderRail(ladderX,ladderZ + 0.3,blackMaterial)
-)
+  createLadderRail(ladderX, ladderZ - 0.3, blackMaterial),
+  createLadderRail(ladderX, ladderZ + 0.3, blackMaterial)
+);
 
-for(let y = 1.5; y<=5; y+= 0.9){
-  sceen.add(createRung(ladderX,y,ladderZ,blackMaterial))
+for (let y = 1.5; y <= 5; y += 0.9) {
+  sceen.add(createRung(ladderX, y, ladderZ, blackMaterial));
 }
 
-// White Material 
+// White Material
 const whiteMaterial = new THREE.MeshStandardMaterial({
-  color: 0xe6e6e6,   
-  roughness: 0.65,  
-  metalness: 0.02,   
-})
+  color: 0xe6e6e6,
+  roughness: 0.65,
+  metalness: 0.02,
+});
 
 // Create antenna
 const antennaY = 5.4;
 
+sceen.add(createAntenna(-0.81, antennaY, 0.75, whiteMaterial, 2.2)); // Front left
+sceen.add(createAntenna(0.81, antennaY, 0.75, whiteMaterial, 0.8)); // Front right
 
-sceen.add(createAntenna(-0.81,antennaY,0.75,whiteMaterial,2.2)) // Front left 
-sceen.add(createAntenna(0.81,antennaY,0.75,whiteMaterial,0.8)) // Front right
-
-sceen.add(createAntenna(-0.81,antennaY,-0.75,whiteMaterial,0.8)) // back left 
-sceen.add(createAntenna(0.81,antennaY,-0.75,whiteMaterial,2.2)) // back right
+sceen.add(createAntenna(-0.81, antennaY, -0.75, whiteMaterial, 0.8)); // back left
+sceen.add(createAntenna(0.81, antennaY, -0.75, whiteMaterial, 2.2)); // back right
 
 // Create Top Antena
-const {topAntenna,redLight} = createTopAntenna(-0.6,6.5,0.6,blackMaterial)
-sceen.add(topAntenna,redLight)
+const { topAntenna, redLight } = createTopAntenna(
+  -0.6,
+  6.5,
+  0.6,
+  blackMaterial
+);
+sceen.add(topAntenna, redLight);
 
+// Create Dish antena
+const dish = createDish(whiteMaterial)
+dish.position.set(0,6,0)
+// dish.rotation.y = 2
+dish.rotation.x = -Math.PI/2
+
+sceen.add(dish);
 
 //Light
 const ambienlight = new THREE.AmbientLight(0xffffff, 0.5);
 sceen.add(ambienlight);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight.position.set(5,5,4);
+directionalLight.position.set(5, 5, 4);
 sceen.add(directionalLight);
 
 const directionalLightHelper = new THREE.DirectionalLightHelper(
