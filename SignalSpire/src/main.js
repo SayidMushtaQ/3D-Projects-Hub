@@ -8,8 +8,8 @@ import { createLadderRail } from "./lib/createLadderRail.js";
 import { createRung } from "./lib/createRung.js";
 import { createAntenna } from "./lib/createAntenna.js";
 import { createTopAntenna } from "./lib/createTopAntenna.js";
-import {createDish} from './lib/createDish.js'
-import {createDishPole} from './lib/createDishPole.js'
+import { createDishAntenna } from "./lib/createDishAntenna.js";
+
 // Sceen
 const sceen = new THREE.Scene();
 sceen.background = new THREE.Color("#e1e3e1");
@@ -190,12 +190,56 @@ const { topAntenna, redLight } = createTopAntenna(
 sceen.add(topAntenna, redLight);
 
 // Create Dish antena
-const dish = createDish(whiteMaterial)
-dish.position.set(0,6,0)
-// dish.rotation.y = 2
-dish.rotation.x = -Math.PI/2
+const { dish, dishPole } = createDishAntenna(
+  1.18,
+  5.8,
+  0,
+  Math.PI / 2,
+  -Math.PI / 8,
+  Math.PI / 2,
+  0.5,
+  whiteMaterial,
+  blackMaterial
+);
+sceen.add(dish, dishPole);
+const { dish: dish2, dishPole: dishPole2 } = createDishAntenna(
+  -0.98,
+  5.9,
+  0,
+  Math.PI / 2,
+  -Math.PI / 8,
+  -Math.PI / 2,
+  0.3,
+  whiteMaterial,
+  blackMaterial
+);
+sceen.add(dish2, dishPole2);
 
-sceen.add(dish);
+const { dish: dish3, dishPole: dishPole3 } = createDishAntenna(
+  0,
+  5.9,
+  -1.08,
+  Math.PI,
+  Math.PI / 2,
+  -Math.PI / 2,
+  0.4,
+  whiteMaterial,
+  blackMaterial
+);
+sceen.add(dish3, dishPole3);
+
+const { dish: dish4, dishPole: dishPole4} = createDishAntenna(
+  0,
+  5.9,
+  1.074,
+  Math.PI,
+  Math.PI / 2,
+  Math.PI / 2,
+  0.4,
+  whiteMaterial,
+  blackMaterial
+);
+sceen.add(dish4, dishPole4);
 
 //Light
 const ambienlight = new THREE.AmbientLight(0xffffff, 0.5);
