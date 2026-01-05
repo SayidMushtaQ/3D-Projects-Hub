@@ -190,56 +190,56 @@ const { topAntenna, redLight } = createTopAntenna(
 sceen.add(topAntenna, redLight);
 
 // Create Dish antena
-const { dish, dishPole } = createDishAntenna(
-  1.18,
-  5.8,
-  0,
-  Math.PI / 2,
-  -Math.PI / 8,
-  Math.PI / 2,
-  0.5,
+const { dish:rightDish, dishPole:rightDishPole } = createDishAntenna(
+  1.18, // x
+  5.8, // y
+  0,  // z
+  0, // rotate x 
+  0, // rotate y
+  Math.PI/2.3, // rotate z
+  0.5, // size
   whiteMaterial,
   blackMaterial
 );
-sceen.add(dish, dishPole);
-const { dish: dish2, dishPole: dishPole2 } = createDishAntenna(
+sceen.add(rightDish, rightDishPole);
+const { dish: leftDish, dishPole: leftDishPole } = createDishAntenna(
   -0.98,
   5.9,
   0,
-  Math.PI / 2,
-  -Math.PI / 8,
-  -Math.PI / 2,
+  0,
+  0,
+  -Math.PI / 2.3,
   0.3,
   whiteMaterial,
   blackMaterial
 );
-sceen.add(dish2, dishPole2);
+sceen.add(leftDish, leftDishPole);
 
-const { dish: dish3, dishPole: dishPole3 } = createDishAntenna(
+const { dish: backDish, dishPole: backDishPole } = createDishAntenna(
   0,
   5.9,
   -1.08,
-  Math.PI,
-  Math.PI / 2,
-  -Math.PI / 2,
-  0.4,
-  whiteMaterial,
-  blackMaterial
-);
-sceen.add(dish3, dishPole3);
-
-const { dish: dish4, dishPole: dishPole4} = createDishAntenna(
+  Math.PI/3,
   0,
-  5.9,
-  1.074,
-  Math.PI,
-  Math.PI / 2,
-  Math.PI / 2,
+  0,
   0.4,
   whiteMaterial,
   blackMaterial
 );
-sceen.add(dish4, dishPole4);
+sceen.add(backDish, backDishPole);
+
+const { dish: frontDish, dishPole: frontDishPole} = createDishAntenna(
+  0,
+  5.7,
+  1.074,
+  -Math.PI/3,
+  0,
+  0,
+  0.4,
+  whiteMaterial,
+  blackMaterial
+);
+sceen.add(frontDish, frontDishPole);
 
 //Light
 const ambienlight = new THREE.AmbientLight(0xffffff, 0.5);

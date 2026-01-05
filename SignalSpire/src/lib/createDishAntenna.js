@@ -38,7 +38,7 @@ export function createDishAntenna(
   dish.rotation.y = rotationY;
   dish.position.set(x, y, z);
 
-  const dishPole = createDishPole(size,blackMaterial);
+  const dishPole = createDishPole(size - 0.05,blackMaterial);
   dishPole.rotation.x = rotationX;
   dishPole.rotation.z = rotationZ;
   dishPole.rotation.y = rotationY;
