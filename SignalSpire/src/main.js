@@ -31,6 +31,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+
 //  Ground geometry (flat surface)
 const groundGeometry = new THREE.PlaneGeometry(7, 7, 10, 10);
 const groundMaterial = new THREE.MeshStandardMaterial({
@@ -242,7 +243,7 @@ const { dish: frontDish, dishPole: frontDishPole} = createDishAntenna(
 sceen.add(frontDish, frontDishPole);
 
 //Light
-const ambienlight = new THREE.AmbientLight(0xffffff, 0.5);
+const ambienlight = new THREE.AmbientLight(0xffffff, 0.35);
 sceen.add(ambienlight);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
