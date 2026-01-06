@@ -13,8 +13,9 @@ import { createDishAntenna } from "./lib/createDishAntenna.js";
 
 // Sceen
 const sceen = new THREE.Scene();
+const isMobile = window.innerWidth <= 768;
 const GUI = new LilGuI({
-  width: 400,
+  width: isMobile ? 280 : 400,
   title: "Singnal spire",
   closeFolders: true,
 });
