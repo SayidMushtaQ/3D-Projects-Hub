@@ -22,6 +22,7 @@ sceen.background = new THREE.Color("#e1e3e1");
 const topAntennaGUI = GUI.addFolder("Top Antenna");
 const legsGUI = GUI.addFolder("Legs");
 const DishGUI = GUI.addFolder("Dish");
+const braceGUI = GUI.addFolder("Braces");
 const params = {};
 
 // Camera
@@ -78,6 +79,7 @@ const blackMaterial = new THREE.MeshStandardMaterial({
   metalness: 0.8,
 });
 params.offsetofLegs = 0.6;
+params.legSize = 1;
 let offset = params.offsetofLegs;
 
 const legs = [
@@ -86,68 +88,152 @@ const legs = [
   legGeoMetry(-offset, offset, blackMaterial),
   legGeoMetry(-offset, -offset, blackMaterial),
 ];
-legs.forEach(leg => sceen.add(leg))
+legs.forEach((leg) => sceen.add(leg));
 
-legsGUI.add(params, "offsetofLegs",params.offsetofLegs,1.8,0.1).onChange((val) => {
-  legs[0].position.set(val,2,val)
-  legs[1].position.set(val,2,-val)
-  legs[2].position.set(-val,2,val)
-  legs[3].position.set(-val,2,-val)
-}).name('Legs offset');
-
+legsGUI
+  .add(params, "offsetofLegs", params.offsetofLegs, 1.8, 0.1)
+  .onChange((val) => {
+    legs[0].position.set(val, 2, val);
+    legs[1].position.set(val, 2, -val);
+    legs[2].position.set(-val, 2, val);
+    legs[3].position.set(-val, 2, -val);
+  })
+  .name("Legs offset");
+legsGUI
+  .add(params, "legSize", params.legSize, 1.9, 0.1)
+  .onChange((val) => {
+    legs[0].scale.set(val, 1, val);
+    legs[1].scale.set(val, 1, val);
+    legs[2].scale.set(val, 1, val);
+    legs[3].scale.set(val, 1, val);
+  })
+  .name("Legs size");
 
 // Brace geometry
+params.braceSize = 0.05;
+params.frontBraceZ = 0.6;
 
+const braces = {
+  front: [],
+  back: [],
+  right: [],
+  left: [],
+};
 for (let y = -0.8; y < 6; y++) {
+  //Front brace
+  const frontBrace1 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    Math.PI / 4,
+    blackMaterial
+  );
+  frontBrace1.position.x = 0;
+  frontBrace1.position.z = params.frontBraceZ;
+
+  const frontBrace2 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    -Math.PI / 4,
+    blackMaterial
+  );
+  frontBrace2.position.x = 0;
+  frontBrace2.position.z = params.frontBraceZ;
+
+  braces.front.push(frontBrace1, frontBrace2);
+  sceen.add(frontBrace1, frontBrace2);
+
   //Back brace
-  const bacekBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
+  const bacekBrace1 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    Math.PI / 4,
+    blackMaterial
+  );
   bacekBrace1.position.x = 0;
   bacekBrace1.position.z = -0.6;
 
-  const backBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
+  const backBrace2 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    -Math.PI / 4,
+    blackMaterial
+  );
   backBrace2.position.x = 0;
   backBrace2.position.z = -0.6;
-
+  braces.back.push(bacekBrace1, backBrace2);
   sceen.add(bacekBrace1, backBrace2);
 
-  //Front brace
-  const frontBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
-  frontBrace1.position.x = 0;
-  frontBrace1.position.z = 0.6;
-
-  const frontBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
-  frontBrace2.position.x = 0;
-  frontBrace2.position.z = 0.6;
-
-  sceen.add(frontBrace1, frontBrace2);
-
-  //Left brace
-  const leftBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
+  // // //Left brace
+  const leftBrace1 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    Math.PI / 4,
+    blackMaterial
+  );
   leftBrace1.position.x = -0.6;
   leftBrace1.position.z = 0;
   leftBrace1.rotation.y = 1.6;
 
-  const leftBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
+  const leftBrace2 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    -Math.PI / 4,
+    blackMaterial
+  );
   leftBrace2.position.x = -0.6;
   leftBrace2.position.z = 0;
   leftBrace2.rotation.y = 1.6;
 
+  braces.left.push(leftBrace1, leftBrace2);
   sceen.add(leftBrace1, leftBrace2);
 
-  // Right brace
-  const rightBrace1 = createBrace(y, 0, Math.PI / 4, blackMaterial);
+  // // // Right brace
+  const rightBrace1 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    Math.PI / 4,
+    blackMaterial
+  );
   rightBrace1.position.x = 0.6;
   rightBrace1.position.z = 0;
   rightBrace1.rotation.y = 1.6;
 
-  const rightBrace2 = createBrace(y, 0, -Math.PI / 4, blackMaterial);
+  const rightBrace2 = createBrace(
+    y,
+    params.braceSize,
+    0,
+    -Math.PI / 4,
+    blackMaterial
+  );
   rightBrace2.position.x = 0.6;
   rightBrace2.position.z = 0;
   rightBrace2.rotation.y = 1.6;
 
+  braces.right.push(rightBrace1, rightBrace2);
   sceen.add(rightBrace1, rightBrace2);
 }
 
+braceGUI
+  .add(params, "braceSize", 0, 1.5, 0.1)
+  .onChange((val) => {
+    Object.values(braces).forEach((group) => {
+      group.forEach((brac) => brac.scale.set(val, val, val));
+    });
+  })
+  .name("Braces");
+braceGUI.add(params, "frontBraceZ", params.frontBraceZ, 2, 0.1).onChange((val) => {
+  braces.front.forEach((brac) => {
+    brac.position.z = val;
+  });
+});
+console.log(braces);
 // Horizontal Bar
 function createRing(y) {
   const size = 1;
