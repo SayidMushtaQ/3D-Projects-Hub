@@ -20,6 +20,7 @@ const GUI = new LilGuI({
 });
 sceen.background = new THREE.Color("#e1e3e1");
 const topAntennaGUI = GUI.addFolder("Top Antenna");
+const legsGUI = GUI.addFolder("Legs");
 const DishGUI = GUI.addFolder("Dish");
 const params = {};
 
@@ -76,14 +77,25 @@ const blackMaterial = new THREE.MeshStandardMaterial({
   roughness: 0.4,
   metalness: 0.8,
 });
-const offset = 0.6;
+params.offsetofLegs = 0.6;
+let offset = params.offsetofLegs;
 
-sceen.add(
+const legs = [
   legGeoMetry(offset, offset, blackMaterial),
   legGeoMetry(offset, -offset, blackMaterial),
   legGeoMetry(-offset, offset, blackMaterial),
-  legGeoMetry(-offset, -offset, blackMaterial)
-);
+  legGeoMetry(-offset, -offset, blackMaterial),
+];
+legs.forEach(leg => sceen.add(leg))
+
+legsGUI.add(params, "offsetofLegs",params.offsetofLegs,1.8,0.1).onChange((val) => {
+  legs[0].position.set(val,2,val)
+  legs[1].position.set(val,2,-val)
+  legs[2].position.set(-val,2,val)
+  legs[3].position.set(-val,2,-val)
+}).name('Legs offset');
+
+
 // Brace geometry
 
 for (let y = -0.8; y < 6; y++) {
