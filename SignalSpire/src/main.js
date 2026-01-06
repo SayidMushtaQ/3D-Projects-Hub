@@ -23,6 +23,7 @@ const topAntennaGUI = GUI.addFolder("Top Antenna");
 const legsGUI = GUI.addFolder("Legs");
 const DishGUI = GUI.addFolder("Dish");
 const braceGUI = GUI.addFolder("Braces");
+const sideAntennaGUI = GUI.addFolder("Side Antennas")
 const params = {};
 
 // Camera
@@ -294,13 +295,35 @@ const whiteMaterial = new THREE.MeshStandardMaterial({
 });
 
 // Create antenna
-const antennaY = 5.4;
+params.sideAntennaPostionY = 5.4
+params.sideAntennaPostionX = 0.81
 
-sceen.add(createAntenna(-0.81, antennaY, 0.75, whiteMaterial, 2.2)); // Front left
-sceen.add(createAntenna(0.81, antennaY, 0.75, whiteMaterial, 0.8)); // Front right
 
-sceen.add(createAntenna(-0.81, antennaY, -0.75, whiteMaterial, 0.8)); // back left
-sceen.add(createAntenna(0.81, antennaY, -0.75, whiteMaterial, 2.2)); // back right
+const frontLeftAntenna = createAntenna(-params.sideAntennaPostionX, params.sideAntennaPostionY, 0.75, whiteMaterial, 2.2)
+// frontLeftAntenna.position.y = params.sideAntennaPostionY
+sceen.add(frontLeftAntenna); // Front left
+const frontRightAntenna = createAntenna(params.sideAntennaPostionX, params.sideAntennaPostionY, 0.75, whiteMaterial, 0.8)
+sceen.add(frontRightAntenna); // Front right
+const backLeftAntenna = createAntenna(-params.sideAntennaPostionX, params.sideAntennaPostionY, -0.75, whiteMaterial, 0.8)
+sceen.add(backLeftAntenna); // back left
+const backRightAntenna = createAntenna(params.sideAntennaPostionX, params.sideAntennaPostionY, -0.75, whiteMaterial, 2.2)
+sceen.add(backRightAntenna); // back right
+
+sideAntennaGUI.add(params,'sideAntennaPostionY',4.5,params.sideAntennaPostionY,0.01).onChange((val)=>{
+  frontLeftAntenna.position.y = val
+  frontRightAntenna.position.y = val
+
+  backLeftAntenna.position.y = val;
+  backRightAntenna.position.y = val;
+}).name('Postion(y)')
+sideAntennaGUI.add(params,'sideAntennaPostionX',params.sideAntennaPostionX,2,0.01).onChange((val)=>{
+  frontLeftAntenna.position.x = -val
+  frontRightAntenna.position.x = val
+
+  backLeftAntenna.position.x = -val;
+  backRightAntenna.position.x = val;
+}).name('Postion(x)')
+
 
 // Create Top Antena
 params.topAntennaPositionX = -0.6;
@@ -422,9 +445,9 @@ leftDishGUI
     leftDish.rotation.z = -Math.PI / val;
     leftDishPole.rotation.z = -Math.PI / val;
   })
-  .min(-1)
-  .max(2)
-  .step(0.05)
+  .min(params.leftDishRotationz)
+  .max(-0.602)
+  .step(0.005)
   .name("Rotation(z)");
 sceen.add(leftDish, leftDishPole);
 
