@@ -16,14 +16,15 @@ const sceen = new THREE.Scene();
 const GUI = new LilGuI({
   width: 400,
   title: "Singnal spire",
-  // closeFolders: true,
+  closeFolders: true,
 });
 sceen.background = new THREE.Color("#e1e3e1");
 const topAntennaGUI = GUI.addFolder("Top Antenna");
+topAntennaGUI.open();
 const legsGUI = GUI.addFolder("Legs");
 const DishGUI = GUI.addFolder("Dish");
 const braceGUI = GUI.addFolder("Braces");
-const sideAntennaGUI = GUI.addFolder("Side Antennas")
+const sideAntennaGUI = GUI.addFolder("Side Antennas");
 const params = {};
 
 // Camera
@@ -33,7 +34,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = 10;
+camera.position.z = 11.5;
 
 // Canvas
 const canvas = document.getElementById("draw");
@@ -112,7 +113,7 @@ legsGUI
 
 // Brace geometry
 params.braceSize = 0.05;
-params.bracePostion = 0.6
+params.bracePostion = 0.6;
 params.frontBraceZ = params.bracePostion;
 params.backBraceZ = -params.bracePostion;
 params.leftBraceX = -params.bracePostion;
@@ -248,7 +249,8 @@ braceGUI
     braces.right.forEach((brac) => {
       brac.position.x = val;
     });
-  }).name("Brace Postion");
+  })
+  .name("Brace Postion");
 console.log(braces);
 // Horizontal Bar
 function createRing(y) {
@@ -295,35 +297,63 @@ const whiteMaterial = new THREE.MeshStandardMaterial({
 });
 
 // Create antenna
-params.sideAntennaPostionY = 5.4
-params.sideAntennaPostionX = 0.81
+params.sideAntennaPostionY = 5.4;
+params.sideAntennaPostionX = 0.81;
 
-
-const frontLeftAntenna = createAntenna(-params.sideAntennaPostionX, params.sideAntennaPostionY, 0.75, whiteMaterial, 2.2)
+const frontLeftAntenna = createAntenna(
+  -params.sideAntennaPostionX,
+  params.sideAntennaPostionY,
+  0.75,
+  whiteMaterial,
+  2.2
+);
 // frontLeftAntenna.position.y = params.sideAntennaPostionY
 sceen.add(frontLeftAntenna); // Front left
-const frontRightAntenna = createAntenna(params.sideAntennaPostionX, params.sideAntennaPostionY, 0.75, whiteMaterial, 0.8)
+const frontRightAntenna = createAntenna(
+  params.sideAntennaPostionX,
+  params.sideAntennaPostionY,
+  0.75,
+  whiteMaterial,
+  0.8
+);
 sceen.add(frontRightAntenna); // Front right
-const backLeftAntenna = createAntenna(-params.sideAntennaPostionX, params.sideAntennaPostionY, -0.75, whiteMaterial, 0.8)
+const backLeftAntenna = createAntenna(
+  -params.sideAntennaPostionX,
+  params.sideAntennaPostionY,
+  -0.75,
+  whiteMaterial,
+  0.8
+);
 sceen.add(backLeftAntenna); // back left
-const backRightAntenna = createAntenna(params.sideAntennaPostionX, params.sideAntennaPostionY, -0.75, whiteMaterial, 2.2)
+const backRightAntenna = createAntenna(
+  params.sideAntennaPostionX,
+  params.sideAntennaPostionY,
+  -0.75,
+  whiteMaterial,
+  2.2
+);
 sceen.add(backRightAntenna); // back right
 
-sideAntennaGUI.add(params,'sideAntennaPostionY',4.5,params.sideAntennaPostionY,0.01).onChange((val)=>{
-  frontLeftAntenna.position.y = val
-  frontRightAntenna.position.y = val
+sideAntennaGUI
+  .add(params, "sideAntennaPostionY", 4.5, params.sideAntennaPostionY, 0.01)
+  .onChange((val) => {
+    frontLeftAntenna.position.y = val;
+    frontRightAntenna.position.y = val;
 
-  backLeftAntenna.position.y = val;
-  backRightAntenna.position.y = val;
-}).name('Postion(y)')
-sideAntennaGUI.add(params,'sideAntennaPostionX',params.sideAntennaPostionX,2,0.01).onChange((val)=>{
-  frontLeftAntenna.position.x = -val
-  frontRightAntenna.position.x = val
+    backLeftAntenna.position.y = val;
+    backRightAntenna.position.y = val;
+  })
+  .name("Postion(y)");
+sideAntennaGUI
+  .add(params, "sideAntennaPostionX", params.sideAntennaPostionX, 2, 0.01)
+  .onChange((val) => {
+    frontLeftAntenna.position.x = -val;
+    frontRightAntenna.position.x = val;
 
-  backLeftAntenna.position.x = -val;
-  backRightAntenna.position.x = val;
-}).name('Postion(x)')
-
+    backLeftAntenna.position.x = -val;
+    backRightAntenna.position.x = val;
+  })
+  .name("Postion(x)");
 
 // Create Top Antena
 params.topAntennaPositionX = -0.6;
@@ -562,13 +592,6 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(5, 5, 4);
 sceen.add(directionalLight);
 
-const directionalLightHelper = new THREE.DirectionalLightHelper(
-  directionalLight,
-  1,
-  "red"
-);
-sceen.add(directionalLightHelper);
-
 // OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -578,7 +601,9 @@ controls.dampingFactor = 0.5;
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
 function action() {
