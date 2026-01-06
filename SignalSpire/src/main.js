@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import LilGuI from "lil-gui";
 
 import { legGeoMetry } from "./lib/createLegs.js";
 import { createBrace } from "./lib/createBrace.js";
@@ -12,7 +13,15 @@ import { createDishAntenna } from "./lib/createDishAntenna.js";
 
 // Sceen
 const sceen = new THREE.Scene();
+const GUI = new LilGuI({
+  width: 400,
+  title: "Singnal spire",
+  // closeFolders: true,
+});
 sceen.background = new THREE.Color("#e1e3e1");
+const topAntennaGUI = GUI.addFolder("Top Antenna");
+const DishGUI = GUI.addFolder("Dish");
+const params = {};
 
 // Camera
 const camera = new THREE.PerspectiveCamera(
@@ -30,7 +39,6 @@ const canvas = document.getElementById("draw");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
 
 //  Ground geometry (flat surface)
 const groundGeometry = new THREE.PlaneGeometry(7, 7, 10, 10);
@@ -182,64 +190,232 @@ sceen.add(createAntenna(-0.81, antennaY, -0.75, whiteMaterial, 0.8)); // back le
 sceen.add(createAntenna(0.81, antennaY, -0.75, whiteMaterial, 2.2)); // back right
 
 // Create Top Antena
+params.topAntennaPositionX = -0.6;
+params.topAntennaPositionZ = 0.6;
 const { topAntenna, redLight } = createTopAntenna(
-  -0.6,
+  params.topAntennaPositionX,
   6.5,
-  0.6,
+  params.topAntennaPositionZ,
   blackMaterial
 );
+topAntennaGUI
+  .add(params, "topAntennaPositionX")
+  .onChange((val) => {
+    topAntenna.position.x = val;
+    redLight.position.x = val;
+  })
+  .min(-1)
+  .max(1)
+  .name("Position(x)");
+topAntennaGUI
+  .add(params, "topAntennaPositionZ")
+  .onChange((val) => {
+    topAntenna.position.z = val;
+    redLight.position.z = val;
+  })
+  .min(-1)
+  .max(1)
+  .name("Position(z)");
 sceen.add(topAntenna, redLight);
 
 // Create Dish antena
-const { dish:rightDish, dishPole:rightDishPole } = createDishAntenna(
-  1.18, // x
+const rightDishGUI = DishGUI.addFolder("Right Dish");
+
+params.rightDishPostionx = 1.18;
+params.rightDishRotationz = Math.PI / 2.3;
+params.rightDishRotationz = Number(params.rightDishRotationz.toFixed(3));
+params.rightDishSize = 0.5;
+const { dish: rightDish, dishPole: rightDishPole } = createDishAntenna(
+  params.rightDishPostionx, // x
   5.8, // y
-  0,  // z
-  0, // rotate x 
+  0, // z
+  0, // rotate x
   0, // rotate y
-  Math.PI/2.3, // rotate z
-  0.5, // size
+  params.rightDishRotationz, // rotate z
+  params.rightDishSize, // size
   whiteMaterial,
   blackMaterial
 );
+rightDishGUI
+  .add(params, "rightDishPostionx")
+  .onChange((val) => {
+    rightDish.position.x = val;
+    rightDishPole.position.x = val;
+  })
+  .min(params.rightDishPostionx)
+  .max(3)
+  .name("Position(x)");
+rightDishGUI
+  .add(params, "rightDishSize")
+  .onChange((val) => {
+    rightDish.scale.set(val, val, val);
+    rightDishPole.scale.set(val, val, val);
+  })
+  .min(params.rightDishSize)
+  .max(2)
+  .name("Scale");
+rightDishGUI
+  .add(params, "rightDishRotationz")
+  .onChange((val) => {
+    rightDish.rotation.z = Math.PI / val;
+    rightDishPole.rotation.z = Math.PI / val;
+  })
+  .min(params.rightDishRotationz)
+  .max(5)
+  .step(0.05)
+  .name("Rotation(z)");
 sceen.add(rightDish, rightDishPole);
+
+const leftDishGUI = DishGUI.addFolder("Left Dish");
+params.leftDishPostionx = -0.98;
+params.leftDishRotationz = -Math.PI / 2.5;
+params.leftDishRotationz = Number(params.leftDishRotationz.toFixed(3));
+params.leftDishSize = 0.3;
 const { dish: leftDish, dishPole: leftDishPole } = createDishAntenna(
-  -0.98,
+  params.leftDishPostionx,
   5.9,
   0,
   0,
   0,
-  -Math.PI / 2.3,
-  0.3,
+  params.leftDishRotationz,
+  params.leftDishSize,
   whiteMaterial,
   blackMaterial
 );
+leftDishGUI
+  .add(params, "leftDishPostionx")
+  .onChange((val) => {
+    leftDish.position.x = val;
+    leftDishPole.position.x = val;
+  })
+  .min(-3)
+  .max(params.leftDishPostionx)
+  .name("Position(x)");
+
+leftDishGUI
+  .add(params, "leftDishSize")
+  .onChange((val) => {
+    leftDish.scale.set(val, val, val);
+    leftDishPole.scale.set(val, val, val);
+  })
+  .min(params.leftDishSize)
+  .max(2)
+  .step(0.005)
+  .name("Scale");
+
+leftDishGUI
+  .add(params, "leftDishRotationz")
+  .onChange((val) => {
+    leftDish.rotation.z = -Math.PI / val;
+    leftDishPole.rotation.z = -Math.PI / val;
+  })
+  .min(-1)
+  .max(2)
+  .step(0.05)
+  .name("Rotation(z)");
 sceen.add(leftDish, leftDishPole);
 
+const backDishGUI = DishGUI.addFolder("Back Dish");
+
+params.backDishPostionz = -1.09;
+params.backDishRotationx = Math.PI / 3;
+params.backDishRotationx = Number(params.backDishRotationx.toFixed(3));
+params.backDishSize = 0.4;
 const { dish: backDish, dishPole: backDishPole } = createDishAntenna(
   0,
   5.9,
-  -1.08,
-  Math.PI/3,
+  params.backDishPostionz,
+  params.backDishRotationx,
   0,
   0,
-  0.4,
+  params.backDishSize,
   whiteMaterial,
   blackMaterial
 );
+backDishGUI
+  .add(params, "backDishPostionz")
+  .onChange((val) => {
+    backDish.position.z = val;
+    backDishPole.position.z = val;
+  })
+  .min(-3)
+  .max(params.backDishPostionz)
+  .name("Position(z)");
+
+backDishGUI
+  .add(params, "backDishSize")
+  .onChange((val) => {
+    backDish.scale.set(val, val, val);
+    backDishPole.scale.set(val, val, val);
+  })
+  .min(params.backDishSize)
+  .max(2)
+  .step(0.005)
+  .name("Scale");
+
+backDishGUI
+  .add(params, "backDishRotationx")
+  .onChange((val) => {
+    backDish.rotation.x = Math.PI / val;
+    backDishPole.rotation.x = Math.PI / val;
+  })
+  .min(params.backDishRotationx)
+  .max(3)
+  .step(0.05)
+  .name("Rotation(x)");
 sceen.add(backDish, backDishPole);
 
-const { dish: frontDish, dishPole: frontDishPole} = createDishAntenna(
+const frontDishGUI = DishGUI.addFolder("Front Dish");
+
+params.frontDishPostionz = 1.074;
+params.frontDishRotationx = -Math.PI / 3;
+params.frontDishRotationx = Number(params.frontDishRotationx.toFixed(3));
+params.frontDishSize = 0.4;
+
+const { dish: frontDish, dishPole: frontDishPole } = createDishAntenna(
   0,
   5.7,
-  1.074,
-  -Math.PI/3,
+  params.frontDishPostionz,
+  params.frontDishRotationx,
   0,
   0,
-  0.4,
+  params.frontDishSize,
   whiteMaterial,
   blackMaterial
 );
+
+frontDishGUI
+  .add(params, "frontDishPostionz")
+  .onChange((val) => {
+    frontDish.position.z = val;
+    frontDishPole.position.z = val;
+  })
+  .min(params.frontDishPostionz)
+  .max(3)
+  .name("Position(z)");
+
+frontDishGUI
+  .add(params, "frontDishSize")
+  .onChange((val) => {
+    frontDish.scale.set(val, val, val);
+    frontDishPole.scale.set(val, val, val);
+  })
+  .min(params.frontDishSize)
+  .max(2)
+  .step(0.005)
+  .name("Scale");
+
+frontDishGUI
+  .add(params, "frontDishRotationx")
+  .onChange((val) => {
+    frontDish.rotation.x = Math.PI / val;
+    frontDishPole.rotation.x = Math.PI / val;
+  })
+  .min(params.frontDishRotationx)
+  .max(-0.2)
+  .step(0.005)
+  .name("Rotation(x)");
+
 sceen.add(frontDish, frontDishPole);
 
 //Light
