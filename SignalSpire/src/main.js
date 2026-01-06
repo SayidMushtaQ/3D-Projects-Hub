@@ -111,7 +111,11 @@ legsGUI
 
 // Brace geometry
 params.braceSize = 0.05;
-params.frontBraceZ = 0.6;
+params.bracePostion = 0.6
+params.frontBraceZ = params.bracePostion;
+params.backBraceZ = -params.bracePostion;
+params.leftBraceX = -params.bracePostion;
+params.rihgtBraceX = params.bracePostion;
 
 const braces = {
   front: [],
@@ -153,7 +157,7 @@ for (let y = -0.8; y < 6; y++) {
     blackMaterial
   );
   bacekBrace1.position.x = 0;
-  bacekBrace1.position.z = -0.6;
+  bacekBrace1.position.z = params.backBraceZ;
 
   const backBrace2 = createBrace(
     y,
@@ -163,7 +167,7 @@ for (let y = -0.8; y < 6; y++) {
     blackMaterial
   );
   backBrace2.position.x = 0;
-  backBrace2.position.z = -0.6;
+  backBrace2.position.z = params.backBraceZ;
   braces.back.push(bacekBrace1, backBrace2);
   sceen.add(bacekBrace1, backBrace2);
 
@@ -175,7 +179,7 @@ for (let y = -0.8; y < 6; y++) {
     Math.PI / 4,
     blackMaterial
   );
-  leftBrace1.position.x = -0.6;
+  leftBrace1.position.x = params.leftBraceX;
   leftBrace1.position.z = 0;
   leftBrace1.rotation.y = 1.6;
 
@@ -186,7 +190,7 @@ for (let y = -0.8; y < 6; y++) {
     -Math.PI / 4,
     blackMaterial
   );
-  leftBrace2.position.x = -0.6;
+  leftBrace2.position.x = params.leftBraceX;
   leftBrace2.position.z = 0;
   leftBrace2.rotation.y = 1.6;
 
@@ -201,7 +205,7 @@ for (let y = -0.8; y < 6; y++) {
     Math.PI / 4,
     blackMaterial
   );
-  rightBrace1.position.x = 0.6;
+  rightBrace1.position.x = params.rihgtBraceX;
   rightBrace1.position.z = 0;
   rightBrace1.rotation.y = 1.6;
 
@@ -212,7 +216,7 @@ for (let y = -0.8; y < 6; y++) {
     -Math.PI / 4,
     blackMaterial
   );
-  rightBrace2.position.x = 0.6;
+  rightBrace2.position.x = params.rihgtBraceX;
   rightBrace2.position.z = 0;
   rightBrace2.rotation.y = 1.6;
 
@@ -221,18 +225,29 @@ for (let y = -0.8; y < 6; y++) {
 }
 
 braceGUI
-  .add(params, "braceSize", 0, 1.5, 0.1)
+  .add(params, "braceSize", 1, 1.6, 0.1)
   .onChange((val) => {
     Object.values(braces).forEach((group) => {
       group.forEach((brac) => brac.scale.set(val, val, val));
     });
   })
   .name("Braces");
-braceGUI.add(params, "frontBraceZ", params.frontBraceZ, 2, 0.1).onChange((val) => {
-  braces.front.forEach((brac) => {
-    brac.position.z = val;
-  });
-});
+braceGUI
+  .add(params, "bracePostion", params.bracePostion, 2, 0.1)
+  .onChange((val) => {
+    braces.front.forEach((brac) => {
+      brac.position.z = val;
+    });
+    braces.back.forEach((brac) => {
+      brac.position.z = -val;
+    });
+    braces.left.forEach((brac) => {
+      brac.position.x = -val;
+    });
+    braces.right.forEach((brac) => {
+      brac.position.x = val;
+    });
+  }).name("Brace Postion");
 console.log(braces);
 // Horizontal Bar
 function createRing(y) {
